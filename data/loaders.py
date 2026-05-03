@@ -9,6 +9,9 @@ Journal extension (IOS Press 2016):
   3. Car Evaluation (UCI) — 1728 samples, 6 categorical features, 4 classes
   4. FTCDC — Firm-Teacher Clave-Direction Classification (UCI)
 
+Extra:
+  5. Iris (UCI) — 150 samples, 4 features, 3 classes
+
 Metrics used in the paper: intra-class inertia, inter-class inertia, NMI, runtime.
 Comparisons: k-MM vs k-means, PAM, CLARA, CLARANS.
 
@@ -18,12 +21,122 @@ import os
 import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+import pandas as pd
 
 
 def _scale(X: np.ndarray) -> np.ndarray:
     """Min-max normalize to [0, 1] per feature."""
     return MinMaxScaler().fit_transform(X.astype(float))
 
+
+# ─── 0. Iris ──────────────────────────────────────────────────────────────────
+
+def load_iris_data(csv_path: str = None):
+    """
+    Iris: 150 samples, 4 numeric features, 3 classes.
+    k = 3.
+    Expects iris.csv in the data/ directory (last column = class label).
+    """
+    if csv_path is None:
+        # Try next to this file, then next to the caller
+        candidates = [
+            os.path.join(os.path.dirname(__file__), "iris.csv"),
+            os.path.join(os.path.dirname(__file__), "..", "data", "iris.csv"),
+            "iris.csv",
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                csv_path = path
+                break
+        else:
+            raise FileNotFoundError(
+                "iris.csv not found. Place it in the data/ directory."
+            )
+
+    df = pd.read_csv(csv_path)
+    X = df.iloc[:, :-1].values.astype(float)
+    y = LabelEncoder().fit_transform(df.iloc[:, -1].values)
+    return _scale(X), y
+
+def load_wine_data(csv_path: str = None):
+    if csv_path is None:
+        candidates = [
+            os.path.join(os.path.dirname(__file__), "wine.csv"),
+            os.path.join(os.path.dirname(__file__), "..", "data", "wine.csv"),
+            "wine.csv",
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                csv_path = path
+                break
+        else:
+            raise FileNotFoundError("wine.csv not found.")
+
+    df = pd.read_csv(csv_path)
+
+    # ✅ label is FIRST column
+    y = LabelEncoder().fit_transform(df.iloc[:, 0].values)
+
+    # ✅ features are the rest
+    X = df.iloc[:, 1:].values.astype(float)
+
+    return _scale(X), y
+
+def load_mnist_data(n_samples: int = 10000, n_components: int = 50,
+                    random_state: int = 42, csv_path: str = None):
+    """
+    MNIST digits: 784 features (28x28 pixels), 10 classes (0-9).
+    Expects mnist_train.csv with first column 'label', rest pixel values.
+    Takes n_samples via stratified sampling (equal per digit class).
+    Reduces to n_components via PCA, then MinMax scales.
+    k = 10.
+    """
+    from sklearn.decomposition import PCA
+
+    if csv_path is None:
+        candidates = [
+            os.path.join(os.path.dirname(__file__), "mnist_train.csv"),
+            os.path.join(os.path.dirname(__file__), "..", "data", "mnist_train.csv"),
+            "mnist_train.csv",
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                csv_path = path
+                break
+        else:
+            raise FileNotFoundError(
+                "mnist_train.csv not found. Download from "
+                "https://www.kaggle.com/datasets/oddrationale/mnist-in-csv "
+                "and place it in the data/ directory."
+            )
+
+    print(f"[MNIST] Loading from {csv_path} ...")
+    df = pd.read_csv(csv_path)
+
+    # First column is label
+    y_raw = df.iloc[:, 0].values.astype(int)
+    X_raw = df.iloc[:, 1:].values.astype(float)
+
+    # Stratified subsample — equal samples per digit class
+    rng = np.random.default_rng(random_state)
+    per_class = n_samples // 10
+    indices = []
+    for digit in range(10):
+        idx = np.where(y_raw == digit)[0]
+        chosen = rng.choice(idx, size=min(per_class, len(idx)), replace=False)
+        indices.append(chosen)
+    indices = np.concatenate(indices)
+    rng.shuffle(indices)
+    X_raw, y_raw = X_raw[indices], y_raw[indices]
+
+    # PCA reduction (784 → n_components)
+    X_scaled = _scale(X_raw)
+    n_comp = min(n_components, X_scaled.shape[0] - 1, X_scaled.shape[1])
+    print(f"[MNIST] Running PCA ({X_scaled.shape[1]} → {n_comp} components) ...")
+    X_pca = PCA(n_components=n_comp, random_state=random_state).fit_transform(X_scaled)
+
+    print(f"[MNIST] Ready: {len(X_pca)} samples, shape={X_pca.shape}, k=10")
+    return _scale(X_pca), y_raw
 
 # ─── 1. Breast Cancer Wisconsin (exact paper dataset) ────────────────────────
 
@@ -71,7 +184,6 @@ def _load_coil100_real(coil_dir: str, max_images: int):
     images, labels = [], []
     for obj_id in range(1, 101):
         for angle in range(0, 360, 5):
-            # COIL-100 filenames: obj1__0.png, obj1__5.png, ...
             for fmt in [f"obj{obj_id}__{angle}.png",
                         f"obj{obj_id}___{angle}.png",
                         f"obj{obj_id}_{angle}.png"]:
@@ -91,7 +203,6 @@ def _load_coil100_real(coil_dir: str, max_images: int):
     X = np.array(images)
     y = np.array(labels)
     X = _scale(X)
-    # PCA: reduce to 50 dimensions (makes inter-point distances meaningful)
     n_comp = min(50, X.shape[0] - 1, X.shape[1])
     X = _scale(PCA(n_components=n_comp, random_state=42).fit_transform(X))
     print(f"[COIL-100] Loaded {len(X)} real images → shape {X.shape}")
@@ -170,11 +281,6 @@ def load_ftcdc_data():
 def load_paper_datasets(coil_max: int = 5000, coil_data_dir: str = None) -> dict:
     """
     Load the exact two datasets from Kechid 2016 Springer paper.
-    These are MANDATORY for the baseline experiment.
-
-    Args:
-        coil_max: max COIL-100 images to load (paper uses up to 5000)
-        coil_data_dir: path to directory containing coil-100/ folder
     """
     print("=" * 50)
     print("Loading paper datasets (Kechid et al. 2016)")

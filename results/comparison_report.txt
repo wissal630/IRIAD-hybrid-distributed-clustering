@@ -1,0 +1,188 @@
+========================================================================
+  CENTRALIZED vs DISTRIBUTED CLUSTERING — COMPARISON REPORT
+  Workers: 4  |  Generated: 2026-05-03 16:48:13
+========================================================================
+
+────────────────────────────────────────────────────────────────────────
+  DATASET : iris   (n=150, k=3)
+────────────────────────────────────────────────────────────────────────
+
+  KMeans        vs  Dist-KMeans
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                  8.1852         8.3347        +1.8%     CENT
+  inter_inertia                 32.9530        32.8034        -0.5%     CENT
+  silhouette                     0.5001         0.4926        -1.5%     CENT
+  davies_bouldin                 0.7939         0.8639        +8.8%     CENT
+  calinski_harabasz            311.2532       306.8809        -1.4%     CENT
+  nmi                            0.6928         0.6961        +0.5%     DIST
+  ari                            0.6286         0.6308        +0.4%     DIST
+  purity                         0.8200         0.8200        +0.0%      TIE
+  runtime_s                      0.0027         0.0091      +240.7%     CENT
+  n_iter                         7.7000         1.0000       -87.0%     DIST
+
+  KMeans++      vs  Dist-KMeans++
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                  7.4032         7.8408        +5.9%     CENT
+  inter_inertia                 33.7350        33.2973        -1.3%     CENT
+  silhouette                     0.5015         0.4823        -3.8%     CENT
+  davies_bouldin                 0.7737         0.8497        +9.8%     CENT
+  calinski_harabasz            342.2288       324.3257        -5.2%     CENT
+  nmi                            0.7237         0.7246        +0.1%     DIST
+  ari                            0.6861         0.6816        -0.7%     CENT
+  purity                         0.8640         0.8533        -1.2%     CENT
+  runtime_s                      0.0050         0.0103      +104.4%     CENT
+  n_iter                         6.6000         1.0000       -84.8%     DIST
+
+  PAM           vs  Dist-PAM
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                  8.7403         7.5122       -14.1%     DIST
+  inter_inertia                 33.1480        33.5996        +1.4%     DIST
+  silhouette                     0.4954         0.4976        +0.4%     DIST
+  davies_bouldin                 0.8707         0.8462        -2.8%     DIST
+  calinski_harabasz            291.0930       328.7539       +12.9%     DIST
+  nmi                            0.7116         0.7631        +7.2%     DIST
+  ari                            0.6450         0.7394       +14.6%     DIST
+  purity                         0.8287         0.8980        +8.4%     DIST
+  runtime_s                      0.0127         0.0263      +107.2%     CENT
+  n_iter                         3.4000         3.3000        -2.9%     DIST
+
+  KMM           vs  Dist-KMM
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                  8.6687         7.5165       -13.3%     DIST
+  inter_inertia                 33.9765        33.5962        -1.1%     CENT
+  silhouette                     0.4892         0.5002        +2.3%     DIST
+  davies_bouldin                 0.7727         0.8572       +10.9%     CENT
+  calinski_harabasz            301.6739       328.5353        +8.9%     DIST
+  nmi                            0.7069         0.7650        +8.2%     DIST
+  ari                            0.6527         0.7395       +13.3%     DIST
+  purity                         0.8333         0.8980        +7.8%     DIST
+  runtime_s                      0.0239         0.0268       +12.1%     CENT
+  n_iter                         9.1000         3.6000       -60.4%     DIST
+
+  KMM++         vs  Dist-KMM++
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                  7.8410         7.5161        -4.1%     DIST
+  inter_inertia                 34.4074        33.3441        -3.1%     CENT
+  silhouette                     0.4894         0.4990        +2.0%     DIST
+  davies_bouldin                 0.7604         0.8700       +14.4%     CENT
+  calinski_harabasz            328.9810       326.0799        -0.9%     CENT
+  nmi                            0.7412         0.7695        +3.8%     DIST
+  ari                            0.7200         0.7425        +3.1%     DIST
+  purity                         0.8813         0.8993        +2.0%     DIST
+  runtime_s                      0.0239         0.0193       -19.3%     DIST
+  n_iter                         7.8000         3.4000       -56.4%     DIST
+
+  ────────────────────────────────────────────────────────────────────
+  SUMMARY — all algorithms on iris
+  ────────────────────────────────────────────────────────────────────
+  Algorithm                runtime_s   intra_inertia             nmi      silhouette
+  ----------------------------------------------------------------------------------
+  Dist-KMM                    0.0268          7.5165          0.7650          0.5002
+  Dist-KMM++                  0.0193          7.5161          0.7695          0.4990
+  Dist-KMeans                 0.0091          8.3347          0.6961          0.4926
+  Dist-KMeans++               0.0103          7.8408          0.7246          0.4823
+  Dist-PAM                    0.0263          7.5122          0.7631          0.4976
+  KMM                         0.0239          8.6687          0.7069          0.4892
+  KMM++                       0.0239          7.8410          0.7412          0.4894
+  KMeans                      0.0027          8.1852          0.6928          0.5001
+  KMeans++                    0.0050          7.4032          0.7237          0.5015
+  PAM                         0.0127          8.7403          0.7116          0.4954
+
+────────────────────────────────────────────────────────────────────────
+  DATASET : breast_cancer   (n=569, k=2)
+────────────────────────────────────────────────────────────────────────
+
+  KMeans        vs  Dist-KMeans
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                215.8383       215.8507        +0.0%     CENT
+  inter_inertia                138.5983       138.5859        -0.0%     CENT
+  silhouette                     0.3845         0.3844        -0.0%     CENT
+  davies_bouldin                 1.1363         1.1365        +0.0%     CENT
+  calinski_harabasz            364.0931       364.0397        -0.0%     CENT
+  nmi                            0.6231         0.6215        -0.3%     CENT
+  ari                            0.7302         0.7290        -0.2%     CENT
+  purity                         0.9279         0.9276        -0.0%     CENT
+  runtime_s                      0.0025         0.0080      +222.3%     CENT
+  n_iter                         6.8000         1.0000       -85.3%     DIST
+
+  KMeans++      vs  Dist-KMeans++
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                215.8383       216.9753        +0.5%     CENT
+  inter_inertia                138.5983       137.4613        -0.8%     CENT
+  silhouette                     0.3845         0.3791        -1.4%     CENT
+  davies_bouldin                 1.1363         1.1441        +0.7%     CENT
+  calinski_harabasz            364.0931       359.4277        -1.3%     CENT
+  nmi                            0.6231         0.6320        +1.4%     DIST
+  ari                            0.7302         0.7370        +0.9%     DIST
+  purity                         0.9279         0.9299        +0.2%     DIST
+  runtime_s                      0.0146         0.0115       -21.2%     DIST
+  n_iter                         9.1000         1.0000       -89.0%     DIST
+
+  PAM           vs  Dist-PAM
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                251.1188       242.3743        -3.5%     DIST
+  inter_inertia                120.1697       125.9388        +4.8%     DIST
+  silhouette                     0.3549         0.3762        +6.0%     DIST
+  davies_bouldin                 1.4984         1.3421       -10.4%     DIST
+  calinski_harabasz            279.6936       294.6736        +5.4%     DIST
+  nmi                            0.5792         0.6388       +10.3%     DIST
+  ari                            0.6799         0.7507       +10.4%     DIST
+  purity                         0.9063         0.9337        +3.0%     DIST
+  runtime_s                      0.0643         0.1800      +179.7%     CENT
+  n_iter                         2.6000         3.1000       +19.2%     CENT
+
+  KMM           vs  Dist-KMM
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                238.6006       242.7936        +1.8%     CENT
+  inter_inertia                138.0643       124.5915        -9.8%     CENT
+  silhouette                     0.3881         0.3749        -3.4%     CENT
+  davies_bouldin                 1.2238         1.3553       +10.7%     CENT
+  calinski_harabasz            328.0899       290.9607       -11.3%     CENT
+  nmi                            0.6199         0.6409        +3.4%     DIST
+  ari                            0.7116         0.7551        +6.1%     DIST
+  purity                         0.9227         0.9350        +1.3%     DIST
+  runtime_s                      0.0561         0.2603      +364.2%     CENT
+  n_iter                         8.8000         4.0000       -54.5%     DIST
+
+  KMM++         vs  Dist-KMM++
+  Metric                    Centralized    Distributed        Delta   Better
+  ---------------------- -------------- -------------- ------------ --------
+  intra_inertia                238.6006       242.7936        +1.8%     CENT
+  inter_inertia                138.0643       124.5915        -9.8%     CENT
+  silhouette                     0.3881         0.3749        -3.4%     CENT
+  davies_bouldin                 1.2238         1.3553       +10.7%     CENT
+  calinski_harabasz            328.0899       290.9607       -11.3%     CENT
+  nmi                            0.6199         0.6409        +3.4%     DIST
+  ari                            0.7116         0.7551        +6.1%     DIST
+  purity                         0.9227         0.9350        +1.3%     DIST
+  runtime_s                      0.0644         0.1439      +123.4%     CENT
+  n_iter                        11.1000         4.0000       -64.0%     DIST
+
+  ────────────────────────────────────────────────────────────────────
+  SUMMARY — all algorithms on breast_cancer
+  ────────────────────────────────────────────────────────────────────
+  Algorithm                runtime_s   intra_inertia             nmi      silhouette
+  ----------------------------------------------------------------------------------
+  Dist-KMM                    0.2603        242.7936          0.6409          0.3749
+  Dist-KMM++                  0.1439        242.7936          0.6409          0.3749
+  Dist-KMeans                 0.0080        215.8507          0.6215          0.3844
+  Dist-KMeans++               0.0115        216.9753          0.6320          0.3791
+  Dist-PAM                    0.1800        242.3743          0.6388          0.3762
+  KMM                         0.0561        238.6006          0.6199          0.3881
+  KMM++                       0.0644        238.6006          0.6199          0.3881
+  KMeans                      0.0025        215.8383          0.6231          0.3845
+  KMeans++                    0.0146        215.8383          0.6231          0.3845
+  PAM                         0.0643        251.1188          0.5792          0.3549
+
+========================================================================
+  END OF REPORT
+========================================================================
