@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clustering Comparison Report</title>
+  
+<style>
+  body  { font-family:'Segoe UI',Arial,sans-serif; margin:2em 3em;
+          background:#f8f9fa; color:#212529; }
+  h1    { color:#1a237e; border-bottom:3px solid #1a237e; padding-bottom:.3em; }
+  h2    { color:#283593; margin-top:2em; }
+  h3    { color:#37474f; }
+  table { border-collapse:collapse; width:100%; margin:1em 0;
+          font-size:.85em; background:white;
+          box-shadow:0 1px 4px rgba(0,0,0,.12); }
+  th    { background:#1a237e; color:white; padding:8px 10px;
+          text-align:right; }
+  th:first-child { text-align:left; }
+  td    { padding:6px 10px; text-align:right;
+          border-bottom:1px solid #e0e0e0; }
+  td:first-child { text-align:left; font-weight:500; }
+  tr:nth-child(even) { background:#f3f4f6; }
+  tr:hover { background:#e8eaf6; }
+  .cent { color:#1565c0; font-weight:bold; }
+  .dist { color:#2e7d32; font-weight:bold; }
+  .tie  { color:#888; }
+  .box  { background:white; border-radius:6px; padding:1.5em;
+          margin:1.5em 0; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+  .plots { display:flex; flex-wrap:wrap; gap:1em; margin:1em 0; }
+  .plots figure { margin:0; width:calc(50% - .5em); min-width:380px; }
+  .plots img    { width:100%; border:1px solid #ddd; border-radius:4px; }
+  figcaption    { text-align:center; font-size:.8em; color:#555;
+                  margin-top:.3em; }
+  .meta  { font-size:.8em; color:#666; margin-top:.5em; }
+  .note  { background:#e8f5e9; border-left:4px solid #43a047;
+           padding:.6em 1em; margin:1em 0; border-radius:3px;
+           font-size:.9em; }
+</style>
+</head>
+<body>
+<h1>Centralized vs Distributed Clustering — Comparison Report</h1>
+<p class="meta">Workers: 4 &nbsp;|&nbsp; Generated: 2026-05-04 09:26:32 &nbsp;|&nbsp;
+All values are the <strong>mean of 10 independent runs</strong>.</p>
+<div class="note">
+  Solid bars = centralized &nbsp;·&nbsp; Hatched bars = distributed.<br>
+  Error bars / ± columns represent one standard deviation across runs.
+</div>
+
+<div class="box">
+<h2>Dataset: iris <small style="font-weight:normal">(n=150, k=3)</small></h2>
+<div class="plots">
+<figure><img src="..\plots/runtime_s_iris.png" alt="Runtime (s)"><figcaption>Runtime (s)</figcaption></figure>
+<figure><img src="..\plots/intra_inertia_iris.png" alt="Intra-cluster Inertia"><figcaption>Intra-cluster Inertia</figcaption></figure>
+</div>
+<h3>KMeans &nbsp;vs&nbsp; Dist-KMeans</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>8.1852</td><td>1.8796</td><td>8.3347</td><td>2.0827</td><td class="cent">+1.8%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>32.9530</td><td>1.8796</td><td>32.8034</td><td>2.0827</td><td class="cent">-0.5%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.5001</td><td>0.0070</td><td>0.4926</td><td>0.0162</td><td class="cent">-1.5%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>0.7939</td><td>0.0475</td><td>0.8639</td><td>0.2891</td><td class="cent">+8.8%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>311.2532</td><td>74.2726</td><td>306.8809</td><td>78.3584</td><td class="cent">-1.4%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.6928</td><td>0.0732</td><td>0.6961</td><td>0.0692</td><td class="dist">+0.5%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.6286</td><td>0.1378</td><td>0.6308</td><td>0.1347</td><td class="dist">+0.4%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.8200</td><td>0.1058</td><td>0.8200</td><td>0.1059</td><td class="tie">+0.0%</td><td class="tie">TIE</td></tr>
+<tr><td>runtime_s</td><td>0.0028</td><td>0.0015</td><td>0.0196</td><td>0.0051</td><td class="cent">+608.9%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>7.7000</td><td>2.4967</td><td>1.0000</td><td>0.0000</td><td class="dist">-87.0%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>KMeans++ &nbsp;vs&nbsp; Dist-KMeans++</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>7.4032</td><td>1.2324</td><td>7.8408</td><td>1.6498</td><td class="cent">+5.9%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>33.7350</td><td>1.2324</td><td>33.2973</td><td>1.6498</td><td class="cent">-1.3%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.5015</td><td>0.0070</td><td>0.4823</td><td>0.0535</td><td class="cent">-3.8%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>0.7737</td><td>0.0320</td><td>0.8497</td><td>0.2892</td><td class="cent">+9.8%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>342.2288</td><td>48.7512</td><td>324.3257</td><td>64.4407</td><td class="cent">-5.2%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.7237</td><td>0.0487</td><td>0.7246</td><td>0.0656</td><td class="dist">+0.1%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.6861</td><td>0.0905</td><td>0.6816</td><td>0.1123</td><td class="cent">-0.7%</td><td class="cent">CENT</td></tr>
+<tr><td>purity</td><td>0.8640</td><td>0.0694</td><td>0.8533</td><td>0.0879</td><td class="cent">-1.2%</td><td class="cent">CENT</td></tr>
+<tr><td>runtime_s</td><td>0.0045</td><td>0.0008</td><td>0.0147</td><td>0.0045</td><td class="cent">+225.2%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>6.6000</td><td>3.1693</td><td>1.0000</td><td>0.0000</td><td class="dist">-84.8%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>PAM &nbsp;vs&nbsp; Dist-PAM</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>8.7403</td><td>1.9799</td><td>7.5122</td><td>0.0213</td><td class="dist">-14.1%</td><td class="dist">DIST</td></tr>
+<tr><td>inter_inertia</td><td>33.1480</td><td>0.9129</td><td>33.5996</td><td>0.6230</td><td class="dist">+1.4%</td><td class="dist">DIST</td></tr>
+<tr><td>silhouette</td><td>0.4954</td><td>0.0104</td><td>0.4976</td><td>0.0112</td><td class="dist">+0.4%</td><td class="dist">DIST</td></tr>
+<tr><td>davies_bouldin</td><td>0.8707</td><td>0.1244</td><td>0.8462</td><td>0.0839</td><td class="dist">-2.8%</td><td class="dist">DIST</td></tr>
+<tr><td>calinski_harabasz</td><td>291.0930</td><td>60.7704</td><td>328.7539</td><td>6.8683</td><td class="dist">+12.9%</td><td class="dist">DIST</td></tr>
+<tr><td>nmi</td><td>0.7116</td><td>0.0841</td><td>0.7631</td><td>0.0199</td><td class="dist">+7.2%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.6450</td><td>0.1524</td><td>0.7394</td><td>0.0080</td><td class="dist">+14.6%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.8287</td><td>0.1118</td><td>0.8980</td><td>0.0032</td><td class="dist">+8.4%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0179</td><td>0.0065</td><td>0.0373</td><td>0.0093</td><td class="cent">+108.9%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>3.4000</td><td>1.1738</td><td>3.3000</td><td>0.6749</td><td class="dist">-2.9%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>KMM &nbsp;vs&nbsp; Dist-KMM</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>8.6687</td><td>1.9945</td><td>7.5165</td><td>0.0196</td><td class="dist">-13.3%</td><td class="dist">DIST</td></tr>
+<tr><td>inter_inertia</td><td>33.9765</td><td>1.0324</td><td>33.5962</td><td>0.6253</td><td class="cent">-1.1%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.4892</td><td>0.0012</td><td>0.5002</td><td>0.0096</td><td class="dist">+2.3%</td><td class="dist">DIST</td></tr>
+<tr><td>davies_bouldin</td><td>0.7727</td><td>0.0320</td><td>0.8572</td><td>0.0843</td><td class="cent">+10.9%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>301.6739</td><td>65.6621</td><td>328.5353</td><td>6.9859</td><td class="dist">+8.9%</td><td class="dist">DIST</td></tr>
+<tr><td>nmi</td><td>0.7069</td><td>0.0815</td><td>0.7650</td><td>0.0203</td><td class="dist">+8.2%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.6527</td><td>0.1609</td><td>0.7395</td><td>0.0081</td><td class="dist">+13.3%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.8333</td><td>0.1151</td><td>0.8980</td><td>0.0032</td><td class="dist">+7.8%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0124</td><td>0.0036</td><td>0.0371</td><td>0.0090</td><td class="cent">+199.0%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>9.1000</td><td>2.5144</td><td>3.6000</td><td>0.9661</td><td class="dist">-60.4%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>KMM++ &nbsp;vs&nbsp; Dist-KMM++</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>7.8410</td><td>1.3065</td><td>7.5161</td><td>0.0203</td><td class="dist">-4.1%</td><td class="dist">DIST</td></tr>
+<tr><td>inter_inertia</td><td>34.4074</td><td>0.6780</td><td>33.3441</td><td>0.4072</td><td class="cent">-3.1%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.4894</td><td>0.0012</td><td>0.4990</td><td>0.0117</td><td class="dist">+2.0%</td><td class="dist">DIST</td></tr>
+<tr><td>davies_bouldin</td><td>0.7604</td><td>0.0214</td><td>0.8700</td><td>0.0660</td><td class="cent">+14.4%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>328.9810</td><td>43.0434</td><td>326.0799</td><td>4.5122</td><td class="cent">-0.9%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.7412</td><td>0.0539</td><td>0.7695</td><td>0.0145</td><td class="dist">+3.8%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.7200</td><td>0.1058</td><td>0.7425</td><td>0.0052</td><td class="dist">+3.1%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.8813</td><td>0.0755</td><td>0.8993</td><td>0.0021</td><td class="dist">+2.0%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0186</td><td>0.0057</td><td>0.0405</td><td>0.0093</td><td class="cent">+117.8%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>7.8000</td><td>3.5214</td><td>3.4000</td><td>0.6992</td><td class="dist">-56.4%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>Summary — all algorithms</h3><table>
+<tr><th>Algorithm</th><th>runtime_s</th><th>intra_inertia</th><th>nmi</th><th>silhouette</th></tr>
+<tr><td>Dist-KMM</td><td>0.0371</td><td>7.5165</td><td>0.7650</td><td>0.5002</td></tr>
+<tr><td>Dist-KMM++</td><td>0.0405</td><td>7.5161</td><td>0.7695</td><td>0.4990</td></tr>
+<tr><td>Dist-KMeans</td><td>0.0196</td><td>8.3347</td><td>0.6961</td><td>0.4926</td></tr>
+<tr><td>Dist-KMeans++</td><td>0.0147</td><td>7.8408</td><td>0.7246</td><td>0.4823</td></tr>
+<tr><td>Dist-PAM</td><td>0.0373</td><td>7.5122</td><td>0.7631</td><td>0.4976</td></tr>
+<tr><td>KMM</td><td>0.0124</td><td>8.6687</td><td>0.7069</td><td>0.4892</td></tr>
+<tr><td>KMM++</td><td>0.0186</td><td>7.8410</td><td>0.7412</td><td>0.4894</td></tr>
+<tr><td>KMeans</td><td>0.0028</td><td>8.1852</td><td>0.6928</td><td>0.5001</td></tr>
+<tr><td>KMeans++</td><td>0.0045</td><td>7.4032</td><td>0.7237</td><td>0.5015</td></tr>
+<tr><td>PAM</td><td>0.0179</td><td>8.7403</td><td>0.7116</td><td>0.4954</td></tr>
+</table></div>
+<div class="box">
+<h2>Dataset: breast_cancer <small style="font-weight:normal">(n=569, k=2)</small></h2>
+<div class="plots">
+<figure><img src="..\plots/runtime_s_breast_cancer.png" alt="Runtime (s)"><figcaption>Runtime (s)</figcaption></figure>
+<figure><img src="..\plots/intra_inertia_breast_cancer.png" alt="Intra-cluster Inertia"><figcaption>Intra-cluster Inertia</figcaption></figure>
+</div>
+<h3>KMeans &nbsp;vs&nbsp; Dist-KMeans</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>215.8383</td><td>0.0000</td><td>215.8507</td><td>0.0107</td><td class="cent">+0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>138.5983</td><td>0.0000</td><td>138.5859</td><td>0.0107</td><td class="cent">-0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.3845</td><td>0.0000</td><td>0.3844</td><td>0.0002</td><td class="cent">-0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>1.1363</td><td>0.0000</td><td>1.1365</td><td>0.0014</td><td class="cent">+0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>364.0931</td><td>0.0000</td><td>364.0397</td><td>0.0460</td><td class="cent">-0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.6231</td><td>0.0000</td><td>0.6215</td><td>0.0068</td><td class="cent">-0.3%</td><td class="cent">CENT</td></tr>
+<tr><td>ari</td><td>0.7302</td><td>0.0000</td><td>0.7290</td><td>0.0048</td><td class="cent">-0.2%</td><td class="cent">CENT</td></tr>
+<tr><td>purity</td><td>0.9279</td><td>0.0000</td><td>0.9276</td><td>0.0014</td><td class="cent">-0.0%</td><td class="cent">CENT</td></tr>
+<tr><td>runtime_s</td><td>0.0037</td><td>0.0016</td><td>0.0145</td><td>0.0015</td><td class="cent">+294.6%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>6.8000</td><td>1.0328</td><td>1.0000</td><td>0.0000</td><td class="dist">-85.3%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>KMeans++ &nbsp;vs&nbsp; Dist-KMeans++</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>215.8383</td><td>0.0000</td><td>216.9753</td><td>3.5435</td><td class="cent">+0.5%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>138.5983</td><td>0.0000</td><td>137.4613</td><td>3.5435</td><td class="cent">-0.8%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.3845</td><td>0.0000</td><td>0.3791</td><td>0.0170</td><td class="cent">-1.4%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>1.1363</td><td>0.0000</td><td>1.1441</td><td>0.0272</td><td class="cent">+0.7%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>364.0931</td><td>0.0000</td><td>359.4277</td><td>14.5295</td><td class="cent">-1.3%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.6231</td><td>0.0000</td><td>0.6320</td><td>0.0200</td><td class="dist">+1.4%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.7302</td><td>0.0000</td><td>0.7370</td><td>0.0161</td><td class="dist">+0.9%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.9279</td><td>0.0000</td><td>0.9299</td><td>0.0045</td><td class="dist">+0.2%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0093</td><td>0.0021</td><td>0.0196</td><td>0.0029</td><td class="cent">+111.7%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>9.1000</td><td>1.3703</td><td>1.0000</td><td>0.0000</td><td class="dist">-89.0%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>PAM &nbsp;vs&nbsp; Dist-PAM</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>251.1188</td><td>30.8102</td><td>242.3743</td><td>1.3259</td><td class="dist">-3.5%</td><td class="dist">DIST</td></tr>
+<tr><td>inter_inertia</td><td>120.1697</td><td>28.8911</td><td>125.9388</td><td>4.2605</td><td class="dist">+4.8%</td><td class="dist">DIST</td></tr>
+<tr><td>silhouette</td><td>0.3549</td><td>0.0775</td><td>0.3762</td><td>0.0042</td><td class="dist">+6.0%</td><td class="dist">DIST</td></tr>
+<tr><td>davies_bouldin</td><td>1.4984</td><td>0.5945</td><td>1.3421</td><td>0.0416</td><td class="dist">-10.4%</td><td class="dist">DIST</td></tr>
+<tr><td>calinski_harabasz</td><td>279.6936</td><td>76.7886</td><td>294.6736</td><td>11.7413</td><td class="dist">+5.4%</td><td class="dist">DIST</td></tr>
+<tr><td>nmi</td><td>0.5792</td><td>0.1733</td><td>0.6388</td><td>0.0066</td><td class="dist">+10.3%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.6799</td><td>0.1929</td><td>0.7507</td><td>0.0138</td><td class="dist">+10.4%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.9063</td><td>0.0778</td><td>0.9337</td><td>0.0039</td><td class="dist">+3.0%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.1013</td><td>0.0321</td><td>0.2498</td><td>0.0355</td><td class="cent">+146.6%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>2.6000</td><td>0.5164</td><td>3.1000</td><td>0.3162</td><td class="cent">+19.2%</td><td class="cent">CENT</td></tr>
+</table>
+<h3>KMM &nbsp;vs&nbsp; Dist-KMM</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>238.6006</td><td>0.0000</td><td>242.7936</td><td>0.0000</td><td class="cent">+1.8%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>138.0643</td><td>0.0000</td><td>124.5915</td><td>0.0000</td><td class="cent">-9.8%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.3881</td><td>0.0000</td><td>0.3749</td><td>0.0000</td><td class="cent">-3.4%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>1.2238</td><td>0.0000</td><td>1.3553</td><td>0.0000</td><td class="cent">+10.7%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>328.0899</td><td>0.0000</td><td>290.9607</td><td>0.0000</td><td class="cent">-11.3%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.6199</td><td>0.0000</td><td>0.6409</td><td>0.0000</td><td class="dist">+3.4%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.7116</td><td>0.0000</td><td>0.7551</td><td>0.0000</td><td class="dist">+6.1%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.9227</td><td>0.0000</td><td>0.9350</td><td>0.0000</td><td class="dist">+1.3%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0733</td><td>0.0116</td><td>0.2094</td><td>0.0347</td><td class="cent">+185.7%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>8.8000</td><td>1.0328</td><td>4.0000</td><td>0.0000</td><td class="dist">-54.5%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>KMM++ &nbsp;vs&nbsp; Dist-KMM++</h3>
+<table><tr><th>Metric</th><th>Cent mean</th><th>±std</th><th>Dist mean</th><th>±std</th><th>Δ%</th><th>Better</th></tr>
+<tr><td>intra_inertia</td><td>238.6006</td><td>0.0000</td><td>242.7936</td><td>0.0000</td><td class="cent">+1.8%</td><td class="cent">CENT</td></tr>
+<tr><td>inter_inertia</td><td>138.0643</td><td>0.0000</td><td>124.5915</td><td>0.0000</td><td class="cent">-9.8%</td><td class="cent">CENT</td></tr>
+<tr><td>silhouette</td><td>0.3881</td><td>0.0000</td><td>0.3749</td><td>0.0000</td><td class="cent">-3.4%</td><td class="cent">CENT</td></tr>
+<tr><td>davies_bouldin</td><td>1.2238</td><td>0.0000</td><td>1.3553</td><td>0.0000</td><td class="cent">+10.7%</td><td class="cent">CENT</td></tr>
+<tr><td>calinski_harabasz</td><td>328.0899</td><td>0.0000</td><td>290.9607</td><td>0.0000</td><td class="cent">-11.3%</td><td class="cent">CENT</td></tr>
+<tr><td>nmi</td><td>0.6199</td><td>0.0000</td><td>0.6409</td><td>0.0000</td><td class="dist">+3.4%</td><td class="dist">DIST</td></tr>
+<tr><td>ari</td><td>0.7116</td><td>0.0000</td><td>0.7551</td><td>0.0000</td><td class="dist">+6.1%</td><td class="dist">DIST</td></tr>
+<tr><td>purity</td><td>0.9227</td><td>0.0000</td><td>0.9350</td><td>0.0000</td><td class="dist">+1.3%</td><td class="dist">DIST</td></tr>
+<tr><td>runtime_s</td><td>0.0779</td><td>0.0143</td><td>0.2015</td><td>0.0169</td><td class="cent">+158.7%</td><td class="cent">CENT</td></tr>
+<tr><td>n_iter</td><td>11.1000</td><td>1.3703</td><td>4.0000</td><td>0.0000</td><td class="dist">-64.0%</td><td class="dist">DIST</td></tr>
+</table>
+<h3>Summary — all algorithms</h3><table>
+<tr><th>Algorithm</th><th>runtime_s</th><th>intra_inertia</th><th>nmi</th><th>silhouette</th></tr>
+<tr><td>Dist-KMM</td><td>0.2094</td><td>242.7936</td><td>0.6409</td><td>0.3749</td></tr>
+<tr><td>Dist-KMM++</td><td>0.2015</td><td>242.7936</td><td>0.6409</td><td>0.3749</td></tr>
+<tr><td>Dist-KMeans</td><td>0.0145</td><td>215.8507</td><td>0.6215</td><td>0.3844</td></tr>
+<tr><td>Dist-KMeans++</td><td>0.0196</td><td>216.9753</td><td>0.6320</td><td>0.3791</td></tr>
+<tr><td>Dist-PAM</td><td>0.2498</td><td>242.3743</td><td>0.6388</td><td>0.3762</td></tr>
+<tr><td>KMM</td><td>0.0733</td><td>238.6006</td><td>0.6199</td><td>0.3881</td></tr>
+<tr><td>KMM++</td><td>0.0779</td><td>238.6006</td><td>0.6199</td><td>0.3881</td></tr>
+<tr><td>KMeans</td><td>0.0037</td><td>215.8383</td><td>0.6231</td><td>0.3845</td></tr>
+<tr><td>KMeans++</td><td>0.0093</td><td>215.8383</td><td>0.6231</td><td>0.3845</td></tr>
+<tr><td>PAM</td><td>0.1013</td><td>251.1188</td><td>0.5792</td><td>0.3549</td></tr>
+</table></div>
+<div class="box">
+<h2>Worker Scaling — Runtime <small style="font-weight:normal">(Distributed Algorithms, Breast Cancer k=2)</small></h2>
+<div class="plots"><figure style="width:100%;max-width:700px"><img src="..\plots/worker_scaling_runtime_s.png" alt="Runtime vs Worker Count"><figcaption>Runtime (s) vs. Number of Workers</figcaption></figure></div>
+<h3>Mean runtime by algorithm and worker count</h3>
+<table><tr><th>Algorithm</th><th>Workers</th><th>Mean Runtime (s)</th><th>±std</th></tr>
+<tr><td>Dist-KMM</td><td>3</td><td>0.1879</td><td>0.0130</td></tr>
+<tr><td>Dist-KMM</td><td>5</td><td>0.1954</td><td>0.0153</td></tr>
+<tr><td>Dist-KMM</td><td>8</td><td>0.1964</td><td>0.0195</td></tr>
+<tr><td>Dist-KMM++</td><td>3</td><td>0.2053</td><td>0.0154</td></tr>
+<tr><td>Dist-KMM++</td><td>5</td><td>0.2021</td><td>0.0191</td></tr>
+<tr><td>Dist-KMM++</td><td>8</td><td>0.2035</td><td>0.0182</td></tr>
+<tr><td>Dist-KMeans</td><td>3</td><td>0.0168</td><td>0.0022</td></tr>
+<tr><td>Dist-KMeans</td><td>5</td><td>0.0165</td><td>0.0021</td></tr>
+<tr><td>Dist-KMeans</td><td>8</td><td>0.0178</td><td>0.0044</td></tr>
+<tr><td>Dist-KMeans++</td><td>3</td><td>0.0246</td><td>0.0035</td></tr>
+<tr><td>Dist-KMeans++</td><td>5</td><td>0.0406</td><td>0.0042</td></tr>
+<tr><td>Dist-KMeans++</td><td>8</td><td>0.0516</td><td>0.0061</td></tr>
+<tr><td>Dist-PAM</td><td>3</td><td>0.2646</td><td>0.0337</td></tr>
+<tr><td>Dist-PAM</td><td>5</td><td>0.2579</td><td>0.0931</td></tr>
+<tr><td>Dist-PAM</td><td>8</td><td>0.2506</td><td>0.0287</td></tr>
+</table>
+</div>
+</body></html>
