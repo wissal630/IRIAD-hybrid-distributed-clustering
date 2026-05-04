@@ -266,34 +266,34 @@ def main():
     
     
     # # ── Experiment 1.5: MNIST digits ─────────────────────────────────────────
-    # print("\n" + "=" * 52)
-    # print("EXP 1.5 — MNIST digits  k=10  (n=10000, PCA=50)")
-    # print("=" * 52)
-    # try:
-    #     X_mnist, y_mnist = load_mnist_data(n_samples=10000, n_components=50,
-    #                                         csv_path=args.mnist_csv)
-    #     print(f"Loaded: shape={X_mnist.shape}")
-    #     mnist_algos_cent = {
-    #         "KMeans":   KMeans,
-    #         "KMeans++": KMeansPlusPlus,
-    #     }
-    #     mnist_algos_dist = {
-    #         "Dist-KMeans":   DistributedKMeans,
-    #         "Dist-KMeans++": DistributedKMeansPlusPlus,
-    #         "Dist-PAM":      DistributedKMedoids,
-    #         "Dist-KMM":      DistributedKMM,
-    #         "Dist-KMM++":    DistributedKMMPlusPlus,
-    #     }
-    #     mnist_algos = {**mnist_algos_cent, **mnist_algos_dist}
-    #     df_mnist = run_experiment(
-    #         "mnist", X_mnist, y_mnist, k=10,
-    #         n_runs=n_runs, algorithms=mnist_algos,
-    #     )
-    #     df_mnist.to_csv(os.path.join(RESULTS_DIR, "baseline_mnist.csv"), index=False)
-    #     _print_summary(df_mnist)
-    #     all_dfs.append(df_mnist)
-    # except FileNotFoundError as e:
-    #     print(f"  [SKIP] {e}")
+    print("\n" + "=" * 52)
+    print("EXP 1.5 — MNIST digits  k=10  (n=10000, PCA=50)")
+    print("=" * 52)
+    try:
+        X_mnist, y_mnist = load_mnist_data(n_samples=2000, n_components=30,
+                                    csv_path=args.mnist_csv)
+        print(f"Loaded: shape={X_mnist.shape}")
+        mnist_algos_cent = {
+            "KMeans":   KMeans,
+            "KMeans++": KMeansPlusPlus,
+        }
+        mnist_algos_dist = {
+            "Dist-KMeans":   DistributedKMeans,
+            "Dist-KMeans++": DistributedKMeansPlusPlus,
+            "Dist-PAM":      DistributedKMedoids,
+            "Dist-KMM":      DistributedKMM,
+            "Dist-KMM++":    DistributedKMMPlusPlus,
+        }
+        mnist_algos = {**mnist_algos_cent, **mnist_algos_dist}
+        df_mnist = run_experiment(
+            "mnist", X_mnist, y_mnist, k=10,
+            n_runs=n_runs, algorithms=mnist_algos,
+        )
+        df_mnist.to_csv(os.path.join(RESULTS_DIR, "baseline_mnist.csv"), index=False)
+        _print_summary(df_mnist)
+        all_dfs.append(df_mnist)
+    except FileNotFoundError as e:
+        print(f"  [SKIP] {e}")
     
 
     # ── Experiment 2: COIL-100 ────────────────────────────────────────────────
