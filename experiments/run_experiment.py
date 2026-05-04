@@ -169,7 +169,6 @@ def run_experiment(name, X, y, k, n_runs, algorithms):
     for algo_name, AlgoClass in algorithms.items():
         mode = "distributed" if algo_name.startswith("Dist-") else "centralized"
         print(f"    [{mode}] {algo_name} × {n_runs} seeds ...", end=" ", flush=True)
-        algo_rows = []
         for seed in range(n_runs):
             try:
                 r = run_once(AlgoClass, X, y, k, seed)
